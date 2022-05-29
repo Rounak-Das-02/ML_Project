@@ -5,8 +5,9 @@
     "colab": {
       "name": "Untitled2.ipynb",
       "provenance": [],
+      "collapsed_sections": [],
       "mount_file_id": "1S_WljCMfwSnAgq0xDuCA7Lb_rFYEdEA-",
-      "authorship_tag": "ABX9TyMTq1KtTNTyM5jGoTRO8VZr"
+      "authorship_tag": "ABX9TyOPf4Fo2IV3q1ndkvWE1l4G"
     },
     "kernelspec": {
       "name": "python3",
@@ -98,7 +99,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 337
+          "height": 357
         },
         "id": "tcN3jjRKS5d_",
         "outputId": "2a65880e-cb99-4781-f571-6d136995b493"
@@ -500,17 +501,6 @@
       ]
     },
     {
-      "cell_type": "code",
-      "source": [
-        "sns.heatmap(df2)"
-      ],
-      "metadata": {
-        "id": "ixTZRghKq2SM"
-      },
-      "execution_count": null,
-      "outputs": []
-    },
-    {
       "cell_type": "markdown",
       "source": [
         "# MODEL IMPLEMENTATIONS:"
@@ -548,7 +538,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 250
+          "height": 357
         },
         "id": "pVnzjOPrYRaw",
         "outputId": "2804f816-5582-4e77-8256-23922581402b"
@@ -846,7 +836,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 206
+          "height": 270
         },
         "id": "Z1qjAGjKbHE5",
         "outputId": "97bb31b3-8db3-40c2-b567-949e5d511ddd"
@@ -1163,7 +1153,7 @@
       "metadata": {
         "colab": {
           "base_uri": "https://localhost:8080/",
-          "height": 206
+          "height": 270
         },
         "id": "bqrR7q65a0Mj",
         "outputId": "704d151c-0f55-4d05-ae28-074383be487e"
@@ -1772,6 +1762,185 @@
           ]
         }
       ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "KNN=KNeighborsRegressor(n_neighbors=5) ## Using k = 5, since it has least error\n",
+        "KNN.fit(X_train,y_train)\n",
+        "y_pred=KNN.predict(X_test)"
+      ],
+      "metadata": {
+        "id": "S8yLWIscdVzv"
+      },
+      "execution_count": 35,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#model evaluation\n",
+        "r4_knn=result(y_test,y_pred)\n",
+        "print(\"MSLE : {}\".format(r4_knn[0]))\n",
+        "print(\"Root MSLE : {}\".format(r4_knn[1]))\n",
+        "print(\"R2 Score : {} or {}%\".format(r4_knn[2],r4_knn[3]))\n",
+        "accu['KNN']=r4_knn"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "TdcDx14OdV4G",
+        "outputId": "fff37c34-451e-4dd9-cebc-f2e358ed159a"
+      },
+      "execution_count": 36,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "MSLE : 0.0014546517532424235\n",
+            "Root MSLE : 0.038139897132037776\n",
+            "R2 Score : 0.765095455068974 or 76.5095%\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#accu.to_csv('errors.csv')"
+      ],
+      "metadata": {
+        "id": "et5cr_g4d2eh"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "5. Random Forest"
+      ],
+      "metadata": {
+        "id": "07smEyyEf4GV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.ensemble import RandomForestRegressor"
+      ],
+      "metadata": {
+        "id": "8fKi0B2VdV6i"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "regressor = RandomForestRegressor(n_estimators=200,random_state=0, min_samples_leaf=1,\n",
+        "                                  max_features=0.5, n_jobs=-1, oob_score=True) ## Will have to tune hyper parameters more. Grid Search CV was too time consuming, hence we decided to go with some defaults\n",
+        "regressor.fit(X_train,y_train)\n",
+        "y_pred = regressor.predict(X_test)"
+      ],
+      "metadata": {
+        "id": "6KL3ZTkHdV86"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "r5_rf=result(y_test,y_pred)\n",
+        "print(\"MSLE : {}\".format(r5_rf[0]))\n",
+        "print(\"Root MSLE : {}\".format(r5_rf[1]))\n",
+        "print(\"R2 Score : {} or {}%\".format(r5_rf[2],r5_rf[3]))\n",
+        "accu['RandomForest Regressor']=r5_rf\n",
+        "#ignoring line 33 and 34"
+      ],
+      "metadata": {
+        "id": "KYVZ2-Y4dV_Y"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "6. XGBoost"
+      ],
+      "metadata": {
+        "id": "FlDbqtRVhP0Z"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import xgboost as xgb"
+      ],
+      "metadata": {
+        "id": "velpznoUhHBs"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#model implementation and fitting data\n",
+        "xg_reg = xgb.XGBRegressor(objective ='reg:squarederror',\n",
+        "                max_depth = 24, alpha = 5, n_estimators = 200)\n",
+        "xg_reg.fit(X_train,y_train)\n",
+        "y_pred = xg_reg.predict(X_test)"
+      ],
+      "metadata": {
+        "id": "iV8z4D0nhHEq"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#model evaluation\n",
+        "y_test_1,y_pred_1=remove_neg(y_test,y_pred)\n",
+        "r8_xg=result(y_test_1,y_pred_1)\n",
+        "print(\"MSLE : {}\".format(r8_xg[0]))\n",
+        "print(\"Root MSLE : {}\".format(r8_xg[1]))\n",
+        "print(\"R2 Score : {} or {}%\".format(r8_xg[2],r8_xg[3]))\n",
+        "#ignorning line 46"
+      ],
+      "metadata": {
+        "id": "M4Q8Z2QOhY-a"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# accu['XGBoost Regressor']=r8_xg\n",
+        "# accu.to_csv('errors.csv')"
+      ],
+      "metadata": {
+        "id": "yznzYkcfhZED"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        ""
+      ],
+      "metadata": {
+        "id": "2uKMCfZAhZIf"
+      },
+      "execution_count": null,
+      "outputs": []
     }
   ]
 }
